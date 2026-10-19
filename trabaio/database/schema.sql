@@ -1,0 +1,33 @@
+CREATE DATABASE IF NOT EXISTS thundercats_db
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE thundercats_db;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255) NOT NULL,
+  papel ENUM('admin', 'editor') NOT NULL DEFAULT 'editor',
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS personagens (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  apelido VARCHAR(100) NULL,
+  especie VARCHAR(100) NOT NULL DEFAULT 'Thundercat',
+  equipe VARCHAR(100) NOT NULL DEFAULT 'ThunderCats',
+  arma_principal VARCHAR(150) NULL,
+  habilidade VARCHAR(255) NULL,
+  descricao TEXT NULL,
+  primeira_aparicao VARCHAR(150) NULL,
+  criado_por INT UNSIGNED NULL,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_personagens_usuario
+    FOREIGN KEY (criado_por) REFERENCES usuarios(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  INDEX idx_personagens_nome (nome),
+  INDEX idx_personagens_equipe (equipe)
+);
